@@ -41,30 +41,11 @@
 // module.exports = app;
 
 
-const express = require('express');
-const multer = require('multer');
-
+const express = require('express')
 const app = express();
 
-const storage =  multer.diskStorage({
-  destination: './files',
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
-
-const uploader = multer({storage});
-
-app.post('/images', uploader.single('image'), (req, res) => {
-  const file = req.file;
-  const meta = req.body;
-  // デッバグのため、アップしたファイルの名前を表示する
-  console.log(file, meta);
-  // アップ完了したら200ステータスを送る
-  res.status(200).json({msg: 'アップロード完了'});
-});
-// publicディレクトリからhtmlをサーブする
-app.use(express.static('public'));
+var imagesRouter = require('./routes/images');
+app.use('/', imagesRouter);
 
 const port = 3000;
 var server = require('http').createServer(app);
