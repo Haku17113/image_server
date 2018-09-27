@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var archiver = require('archiver');
+var fs = require('fs');
+var data_utils = require('date-utils');
 
 router.get('/', function (req, res, next) {
   var extension = '.jpg';

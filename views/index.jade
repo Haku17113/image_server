@@ -2,7 +2,12 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to #{title}<br>
+  p <br>画像のアップロード
   form(action='/upload', method='post', enctype='multipart/form-data')
     input(type='file', name='image')
     input(type='submit', value='Upload')
+
+  p <br>画像のダウンロード
+  form(action='/download', method='get')
+    input(type='submit', value='Dpwnload')
