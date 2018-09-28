@@ -2,21 +2,30 @@ var express = require('express');
 var router = express.Router();
 var archiver = require('archiver');
 var fs = require('fs');
-var data_utils = require('date-utils');
 
 router.get('/', function (req, res, next) {
-  var extension = '.jpg';
+  var fileURL = "./images.zip";
+  var fileName = 'images.zip';
 
-  var fileURL = './files/sky1' + extension;
-  var fileName = 'image' + extension;
+  var archive = archiver.create('zip', {});
+  var output = fs.createWriteStream(fileURL);
+  archive.pipe(output);
+  archive.directory('./images', 'images');
 
-  res.download(fileURL, fileName, function(err){
-    if(err){
-      console.log('ERROR');
-    }else{
-      console.log('Download done');
-    }
+  output.on("close", function(){
+      var archive_size = archive.pointer() + " total bytes";
+      console.log('\n' + archive_size + '\n');
+
+      res.download(fileURL, fileName, function(err){
+       if(err){
+          console.log('ERROR');
+        }else{
+          console.log('Download done');
+        }
+      });
   });
+
+  archive.finalize();
 });
 
 module.exports = router;
