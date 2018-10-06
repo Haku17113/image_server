@@ -8,12 +8,14 @@ router.get('/', function (req, res, next) {
   var file_path = "./images.zip";
   var file_name = 'images.zip';
 
-  var origin_path = './uploaded_images'
-  var dir_path = './images';
+  var origin_path = './uploaded_images/'
+  var dir_path = './images/';
 
-  rmdir(dir_path , function ( err, dirs, files ){
-    console.log('remove directory');
-  });
+  // rmdir(dir_path , function ( err, dirs, files ){
+  //   console.log('remove directory');
+  // });
+
+  cp(origin_path + 'sky1.jpg', dir_path + 'sky1.jpg');
 
   var archive = archiver.create('zip', {});
   var output = fs.createWriteStream(file_path);
@@ -26,7 +28,7 @@ router.get('/', function (req, res, next) {
 
       res.download(file_path, file_name, function(err){
        if(err){
-          console.log('ERROR');
+          console.log(err.stack);
         }else{
           console.log('Download done');
         }
@@ -37,7 +39,13 @@ router.get('/', function (req, res, next) {
 });
 
 function cp(origin, copy){
-  fs.createReadStream(origin).pipe(fs.createWriteStream(copy));
+  fs.copyFile(origin, copy, function (err){
+    if(err){
+      console.log(err.stack);
+    }else{
+      console.log('Copy done.');
+    }
+  });
 }
 
 module.exports = router;
