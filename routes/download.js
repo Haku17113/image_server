@@ -2,39 +2,57 @@ var express = require('express');
 var router = express.Router();
 var archiver = require('archiver');
 var fs = require('fs');
+var date_utils = require('date-utils');
 var rmdir = require('rmdir')
 
 router.get('/', (req, res, next) => {
-  var file_path = "./images.zip";
-  var file_name = 'images.zip';
+  var zip_file_path = "./images.zip";
+  var zip_file_name = 'images.zip';
 
-  var origin_path = './uploaded_images/'
-  var dir_path = './images/';
+  var uploader_dir_path = './uploaded_images/'
+  var archive_dir_path = './images/';
 
-  getFileList(dir_path, (file) => {
-    console.log(file);
+  var selected_ago = [1, 3, 5, 7, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+
+  getFileList(archive_dir_path, (file) => {
     fs.unlink(file, (err) => {
       if(err){
         console.log(err.stack);
       }else{
-        console.log('Removing files done.');
+        console.log('Removing file done.');
       }
     });
   });
 
-  for(var i = 1; i <= 3; i++){
-    cp(origin_path + 'sky' + i + '.jpg', dir_path + 'image' + i + '.jpg');
+  // var now = new Date('2018/10/08 11:23');
+  var now = new Date();
+  console.log('now: ' + now.toFormat('YYYYMMDDHH24MI'));
+  var selected_times = [];
+  for(var i = 0; i < selected_ago.length; i++){
+    var time = now.remove({'minutes': selected_ago[i]}).toFormat('YYYYMMDDHH24MI');
+    selected_times.push(time);
+    now.add({'minutes': selected_ago[i]});
   }
+  console.log(selected_times);
+
+  getFileList(uploader_dir_path, (file) => {
+    for(var i = 0; i < selected_times.length; i++){
+      if(file == uploader_dir_path + selected_times[i] + '.jpg'){
+        cp(file, archive_dir_path + selected_times[i] + '.jpg');
+        break;
+      }
+    }
+  });
 
   var archive = archiver.create('zip', {});
-  var output = fs.createWriteStream(file_path);
+  var output = fs.createWriteStream(zip_file_path);
   archive.pipe(output);
-  archive.directory(origin_path, 'images');
+  archive.directory(uploader_dir_path, 'images');
 
   output.on("close", () => {
       console.log('Archiving done. (archive size: ' + archive.pointer() + ' total bytes)');
 
-      res.download(file_path, file_name, (err) => {
+      res.download(zip_file_path, zip_file_name, (err) => {
        if(err){
           console.log(err.stack);
         }else{
