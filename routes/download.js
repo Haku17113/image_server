@@ -11,11 +11,11 @@ router.get('/', function (req, res, next) {
   var origin_path = './uploaded_images/'
   var dir_path = './images/';
 
-  // rmdir(dir_path , function ( err, dirs, files ){
-  //   console.log('remove directory');
-  // });
+  for(var i = 1; i <= 3; i++){
+    cp(origin_path + 'sky' + i + '.jpg', dir_path + 'image' + i + '.jpg');
+  }
 
-  cp(origin_path + 'sky1.jpg', dir_path + 'sky1.jpg');
+  var file_list = getFileList(dir_path);
 
   var archive = archiver.create('zip', {});
   var output = fs.createWriteStream(file_path);
@@ -46,6 +46,17 @@ function cp(origin, copy){
       console.log('Copy done.');
     }
   });
+}
+
+function getFileList(path){
+  fs.readdir(path, function(err, files){
+    if(err){
+      console.log(err.stack);
+    }else{
+      console.log(files);
+      return files;
+    }
+});
 }
 
 module.exports = router;
