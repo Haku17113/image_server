@@ -14,6 +14,7 @@ const uploader = multer({storage: storage});
 router.post('/', uploader.single('image'), (req, res, next) => {
   const file = req.file;
   const meta = req.body;
+  console.log('Uploading done.');
   console.log(file, meta);
   
   res.status(200).json({msg: 'アップロード完了'});
