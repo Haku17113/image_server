@@ -24,7 +24,6 @@ router.get('/', (req, res, next) => {
     });
   });
 
-  // var now = new Date('2018/10/08 11:23');
   var now = new Date();
   console.log('now: ' + now.toFormat('YYYYMMDDHH24MI'));
   var selected_times = [];
@@ -47,7 +46,7 @@ router.get('/', (req, res, next) => {
   var archive = archiver.create('zip', {});
   var output = fs.createWriteStream(zip_file_path);
   archive.pipe(output);
-  archive.directory(uploader_dir_path, 'images');
+  archive.directory(archive_dir_path, 'images');
 
   output.on("close", () => {
       console.log('Archiving done. (archive size: ' + archive.pointer() + ' total bytes)');
