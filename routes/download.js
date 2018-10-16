@@ -3,7 +3,6 @@ var router = express.Router();
 var archiver = require('archiver');
 var fs = require('fs');
 var date_utils = require('date-utils');
-var rmdir = require('rmdir')
 
 router.get('/', (req, res, next) => {
   var zip_file_path = "./images.zip";
