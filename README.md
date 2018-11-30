@@ -38,13 +38,13 @@ Webブラウザで http://localhost:3000/ を開く
 npm run start によって実行されるファイルであるwwwが置かれている。
 
 - node_modules:
-Expressなどの各モジュールが置かれている。
+Expressなどの各モジュールが置かれている。
 
 - public:
 viewのためのCSSファイルが置かれている。
 
 - routes:
-機能を実現するコード(JavaScript)が置かれている。
+機能を実現するコード(JavaScript)が置かれている。
 
 - uploaded_images:
 アップロードされた画像が保存される。
@@ -68,7 +68,7 @@ app.use('/download', downloadRouter);
 app.use('/status', statusRouter);
 ```
 app.use('URLの後', モジュール)となっており、指定したURLにアクセスされると各ファイルを呼び出す。<br>
-http://localhost:3000/ にアクセスされた場合URLの後が'/'であるため、routes/index.jsファイルを呼び出す。http://localhost:3000/download  の場合routes/download.jsファイルを呼び出す。
+http://localhost:3000/ にアクセスされた場合URLの後が'/'であるため、routes/index.jsファイルを呼び出す。http://localhost:3000/download  の場合routes/download.jsファイルを呼び出す。
 
 ### routes/index.js
 一部抜粋
@@ -83,7 +83,7 @@ titleという変数に'Image Server'を代入し、views/index.jadeをレスポ
 ```jade
 extends layout //- layout.jadeを継承
 
-block content //- 継承したlayout.jadeの部分に追加
+block content //- 継承したlayout.jadeの部分に追加
   h1= title
   p Welcome to #{title}<br> //- titleは変数
   p <br>画像のアップロード
@@ -93,7 +93,7 @@ block content //- 継承したlayout.jadeの部分に追加
     input(type='submit', value='Upload')
 
   p <br>画像のダウンロード
-  //- ボタンが押されるとhttp://localhost:3000/downloadにGET送信（アクセス）する
+  //- ボタンが押されるとhttp://localhost:3000/downloadにGET送信（アクセス）する
   form(action='/download', method='get')
     input(type='submit', value='Download')
 ```
@@ -103,10 +103,10 @@ block content //- 継承したlayout.jadeの部分に追加
 doctype html
 html
   head
-    title= title //- タイトルにtitle変数を設定
+    title= title //- タイトルにtitle変数を設定
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content //- layout.jadeを継承したファイルが利用する
+    block content //- layout.jadeを継承したファイルが利用する
 ```
 
 ### routes/download.js
@@ -136,13 +136,13 @@ router.get('/', (req, res, next) => {
 ```
 http://localhost:3000/download/ にアクセスされると、router.getで宣言されている関数が実行される。<br>
 res.download で第一引数にダウンロードさせるファイルのパス、第二引数にダウンロードファイルの名前を設定する。<br>
-http://localhost:3000/download/ にアクセスされると、images.zipという圧縮ファイルをダウンロードさせる。images.zipを解凍するとimagesというフォルダが現れる。imagesフォルダ内には、アップロードした画像が置かれている。
+http://localhost:3000/download/ にアクセスされると、images.zipという圧縮ファイルをダウンロードさせる。images.zipを解凍するとimagesというフォルダが現れる。imagesフォルダ内には、アップロードした画像が置かれている。
 
 ### routes/upload.js
 一部抜粋
 ```javascript
 const storage =  multer.diskStorage({
-    destination: './uploaded_images', //　保存するフォルダを指定
+    destination: './uploaded_images', //　保存するフォルダを指定
     filename: (req, file, cb) => {
       cb(null, file.originalname);
     }
@@ -160,5 +160,5 @@ router.post('/', uploader.single('image'), (req, res, next) => {
 });
 ```
 http://localhost:3000/upload/ にPOSTリクエストがあると、router.postで宣言されている関数が実行される。<br>
-uploader.single()で受け取るラベルの設定をする。views/index.jadeでformのinputでname
-に設定したものと同じもの（'image'）にする。
+uploader.single()で受け取るラベルの設定をする。views/index.jadeでformのinputでname
+に設定したものと同じもの（'image'）にする。
